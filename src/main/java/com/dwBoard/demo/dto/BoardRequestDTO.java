@@ -1,7 +1,5 @@
 package com.dwBoard.demo.dto;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Id;
 
 public class BoardRequestDTO {
 
