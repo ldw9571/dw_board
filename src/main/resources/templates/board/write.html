@@ -1,0 +1,95 @@
+<!DOCTYPE HTML>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>게시글 작성</title>
+  <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- 작성 -->
+  <input type="text" id="writeValue" name="writeValue" value="${writeValue}">
+
+  <h1>게시글 작성</h1>
+
+  <!-- 메시지를 표시할 p 태그 (초기 상태에서는 숨겨짐) -->
+  <p id="resultMessage" style="display:none;">${message}</p>
+
+
+  <form action="/board/write" method="POST">
+    <label for="title">제목</label>
+    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+
+    <label for="writer">작성자</label>
+    <input type="text" id="writer" name="writer" placeholder="작성자를 입력하세요" required>
+
+    <label for="content">내용</label>
+    <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+
+    <button type="submit">작성하기</button>
+  </form>
+</div>
+
+<script>
+  //게시글 저장 후 저장 결과 alert
+  window.onload = function() {
+      var message = '${message}';
+      var writeValue = '${writeValue}';
+      var resultMessage = document.getElementById('resultMessage');
+
+      console.log("message="+message);
+      console.log("writeValue="+writeValue);
+      console.log("resultMessage="+resultMessage);
+
+      // writeValue == 1인경우 결과 message 처리
+      if (message && writeValue) {
+          alert(message);
+          resultMessage.style.display = "block";
+      }
+  }
+</script>
+
+</body>
+</html>
