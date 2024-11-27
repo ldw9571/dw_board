@@ -37,10 +37,10 @@ public class BoardController {
     @PostMapping("/board/write")
     public String boardWrite(BoardRequestDTO boardRequestDTO, Model model){
 
-//        System.out.println(boardRequestDTO.getIndex());
-//        System.out.println(boardRequestDTO.getTitle());
-//        System.out.println(boardRequestDTO.getWriter());
-//        System.out.println(boardRequestDTO.getContent());
+        System.out.println(boardRequestDTO.getIndex());
+        System.out.println(boardRequestDTO.getTitle());
+        System.out.println(boardRequestDTO.getWriter());
+        System.out.println(boardRequestDTO.getContent());
 
         //게시글 저장처리
         BoardEntity boardEntity = boardService.write(boardRequestDTO);
@@ -53,10 +53,13 @@ public class BoardController {
         } else {
             model.addAttribute("message", "저장에 실패했습니다.");
             model.addAttribute("writeValue", "0");
-
         }
 
-        return "forward:/board/write";  // 작성 완료 후 다시 작성 폼으로 이동 (혹은 다른 페이지로 리다이렉트)
+        // 모델에 담긴 값 확인
+        System.out.println("Message: " + model.getAttribute("message"));
+        System.out.println("WriteValue: " + model.getAttribute("writeValue"));
+
+        return "redirect:/board/write";
     }
 
 }

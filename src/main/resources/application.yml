@@ -21,5 +21,5 @@ spring:
       enabled: always  # ANSI 컬러 출력 활성화
   logging:
     level:
-      org.hibernate.SQL: debug  # SQL 쿼리 디버깅 로그
+#      org.hibernate.SQL: debug  # SQL 쿼리 디버깅 로그
       org.hibernate.type: trace  # 바인딩된 파라미터 값 추적
