@@ -75,9 +75,10 @@ public class BoardEntity {
     //dto => entity 변환 함수
     public BoardEntity exchange(BoardRequestDTO boardRequestDTO){
         BoardEntity boardEntity = new BoardEntity();
-        boardEntity.setTitle(boardEntity.getTitle());
-        boardEntity.setContent(boardEntity.getContent());
-        boardEntity.setWriter(boardEntity.getWriter());
+        boardEntity.setTitle(boardRequestDTO.getTitle());
+        boardEntity.setContent(boardRequestDTO.getContent());
+        boardEntity.setWriter(boardRequestDTO.getWriter());
+        boardEntity.setDateTime(LocalDateTime.now());
 
         return boardEntity;
     }
