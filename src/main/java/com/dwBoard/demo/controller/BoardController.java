@@ -14,12 +14,12 @@ public class BoardController {
 
 
     // spring 컨테이너가 뜰 때 controller 생성 => 생성자 호출
-    // @Autowired : spring이 spring 컨테이너에 있는 BoardService에 연결 시켜준다
     // => new로 계속 생성자를 만들지 않고  어디서든 BoardService에 연결
     // BoardService에 @Service 설정해줘야함
-    //생성자 단축키 Alt + insert
+    // 생성자 단축키 Alt + insert
     private final BoardService boardService;
 
+    // @Autowired : spring이 spring 컨테이너에 있는 BoardService에 연결 시켜준다
     @Autowired
     public BoardController(BoardService boardService) {
         this.boardService = boardService;
@@ -36,11 +36,6 @@ public class BoardController {
     //게시글 작성
     @PostMapping("/board/write")
     public String boardWrite(BoardRequestDTO boardRequestDTO, Model model){
-
-        System.out.println(boardRequestDTO.getIndex());
-        System.out.println(boardRequestDTO.getTitle());
-        System.out.println(boardRequestDTO.getWriter());
-        System.out.println(boardRequestDTO.getContent());
 
         //게시글 저장처리
         BoardEntity boardEntity = boardService.write(boardRequestDTO);

@@ -14,20 +14,27 @@ java {
 }
 
 configurations {
+	//컴파일 시에만 필요한 라이브러리를 추가
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
 }
 
+//Gradle이 의존성 라이브러리를 다운로드 할 저장소
 repositories {
 	mavenCentral()
 }
 
 dependencies {
+	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//html 템플릿 처리 thymeleaf
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	//Spring Web을 사용
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	//@Getter, @Setter
 	compileOnly 'org.projectlombok:lombok'
+	//컴파일 타임에 Lombok이 생성하는 코드를 처리
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'

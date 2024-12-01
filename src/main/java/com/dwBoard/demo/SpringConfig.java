@@ -5,6 +5,7 @@ import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
+//의존성 설정
 @Configuration
 public class SpringConfig {
 
