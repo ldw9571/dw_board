@@ -8,6 +8,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.Optional;
 
 @Controller
 public class BoardController {
@@ -27,11 +30,44 @@ public class BoardController {
 
 
 
+    //home
+    @GetMapping("/board/home")
+    public String boardHomeForm(){
+        return "/board/home";
+    }
+
     //게시글 작성 페이지 load
     @GetMapping("/board/write")
-    public String boardWriteForm(){
+    public String boardWriteForm(Model model){
         return "/board/write";
     }
+
+    //게시글 작성 페이지 load
+    @GetMapping("/board/boardFindOne")
+    public String boardFindOne(@RequestParam(value = "id",required = false) Long id,
+                                 Model model){
+        //결과에 따른 alert message
+        String message = "";
+
+        if(id != null){
+            Optional<BoardEntity> board = boardService.findById(id);
+            if(board.isPresent()){
+                model.addAttribute("board",board.get());
+                message = "게시글 작성에 성공하였습니다.";
+            }else{
+                message = "해당 게시물을 찾을 수 없습니다. 관리자에게 문의하세요";
+            }
+        }
+
+        // model에 메시지 추가
+        if (message != null && !message.isEmpty()) {
+            model.addAttribute("message", message);
+        }
+
+        System.out.println("message = " + message);  // 모델에 값이 제대로 설정되었는지 확인
+        return "/board/write";
+    }
+
 
     //게시글 작성
     @PostMapping("/board/write")
@@ -40,21 +76,18 @@ public class BoardController {
         //게시글 저장처리
         BoardEntity boardEntity = boardService.write(boardRequestDTO);
 
-        // id가 존재하면 성공, 없으면 실패로 판단
-        // @Param: writeValue = 작성여부 [1:성공]
+        // 게시글 작성 후 alert 띄워주고 작성한 게시물 보여주기
         if (boardEntity.getId() != null) {
-            model.addAttribute("message", "저장에 성공했습니다.");
-            model.addAttribute("writeValue", "1");
+            return "redirect:/board/boardFindOne?id="+boardEntity.getId();
         } else {
-            model.addAttribute("message", "저장에 실패했습니다.");
-            model.addAttribute("writeValue", "0");
+            return "redirect:/board/boardFindOne?";
         }
+    }
 
-        // 모델에 담긴 값 확인
-        System.out.println("Message: " + model.getAttribute("message"));
-        System.out.println("WriteValue: " + model.getAttribute("writeValue"));
+    //게시글 전체조회
+    @GetMapping("/board/findAll")
+    public void boardFindAll(Model model){
 
-        return "redirect:/board/write";
     }
 
 }

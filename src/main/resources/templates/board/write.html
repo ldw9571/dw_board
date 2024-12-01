@@ -1,92 +1,93 @@
 <!DOCTYPE HTML>
-<html lang="ko">
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:c="http://www.w3.org/1999/XSL/Transform">
 <head>
   <meta charset="UTF-8">
   <title>게시글 작성</title>
   <style>
-    body {
-        font-family: Arial, sans-serif;
-        line-height: 1.6;
-        margin: 0;
-        padding: 0;
-    }
-    .container {
-        max-width: 600px;
-        margin: 50px auto;
-        padding: 20px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    h1 {
-        text-align: center;
-        color: #333;
-    }
-    label {
-        font-weight: bold;
-        display: block;
-        margin: 10px 0 5px;
-    }
-    input, textarea, button {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 15px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        font-size: 16px;
-    }
-    button {
-        background-color: #007bff;
-        color: white;
-        font-weight: bold;
-        cursor: pointer;
-        border: none;
-    }
-    button:hover {
-        background-color: #0056b3;
-    }
-  </style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .message {
+            color: green;
+            text-align: center;
+            font-weight: bold;
+        }
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-  <!-- 작성 -->
-  <input type="text" id="writeValue" name="writeValue" value="${writeValue}">
+
+  <!-- message가 null이 아니고 빈 문자열도 아닌 경우에만 alert 띄우기 -->
+  <th:block th:if="${message != null and message != ''}">
+    <script type="text/javascript">
+        alert("[[${message}]]");
+    </script>
+  </th:block>
+
 
   <h1>게시글 작성</h1>
 
-  <!-- 메시지를 표시할 p 태그 (초기 상태에서는 숨겨짐) -->
-  <p id="resultMessage" data-message="${message}" style="display:none;"></p>
-
   <form action="/board/write" method="POST">
     <label for="title">제목</label>
-    <input type="text" id="title" name="title" placeholder="제목을 입력하세요" required>
+    <input type="text" id="title" name="title" placeholder="제목을 입력하세요"
+           th:value="${board != null ? board.title : ''}" required>
 
     <label for="writer">작성자</label>
-    <input type="text" id="writer" name="writer" placeholder="작성자를 입력하세요" required>
+    <input type="text" id="writer" name="writer" placeholder="작성자를 입력하세요"
+           th:value="${board != null ? board.writer : ''}" required>
 
     <label for="content">내용</label>
-    <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required></textarea>
+    <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required
+              th:text="${board != null ? board.content : ''}"></textarea>
 
-    <button type="submit">작성하기</button>
+    <th:block th:if="${board == null}">
+      <button type="submit">작성하기</button>
+    </th:block>
+
   </form>
+
 </div>
-
-<script>
-  window.onload = function() {
-      var resultMessage = document.getElementById('resultMessage');
-      var message = resultMessage.getAttribute('data-message');
-      var writeValue = document.getElementById('writeValue').value;
-
-      console.log("message=" + message);
-      console.log("writeValue=" + writeValue);
-      console.log("resultMessage=" + resultMessage);
-
-      if (message && writeValue) {
-          alert(message);
-          resultMessage.style.display = "block";
-      }
-  }
-</script>
-
 </body>
 </html>
