@@ -6,6 +6,7 @@ import com.dwBoard.demo.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,5 +35,10 @@ public class BoardService {
     public Optional<BoardEntity> findById(Long id) {
         Optional<BoardEntity> board = boardRepository.findById(id);
         return board;
+    }
+
+    public List<BoardEntity> findAll() {
+        List<BoardEntity> boardAll = boardRepository.findAll();
+        return boardAll;
     }
 }

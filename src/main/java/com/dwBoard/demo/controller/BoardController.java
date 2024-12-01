@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -43,9 +44,16 @@ public class BoardController {
     }
 
     //게시글 작성 페이지 load
+    //@param : mode - write: 작성 후 페이지 로드
+    //              - view : 단건 조회
     @GetMapping("/board/boardFindOne")
     public String boardFindOne(@RequestParam(value = "id",required = false) Long id,
+                               @RequestParam(value = "mode",required = false) String mode,
                                  Model model){
+
+        System.out.println("id = " + id);
+        System.out.println("mode = " + mode);
+
         //결과에 따른 alert message
         String message = "";
 
@@ -53,18 +61,22 @@ public class BoardController {
             Optional<BoardEntity> board = boardService.findById(id);
             if(board.isPresent()){
                 model.addAttribute("board",board.get());
+                System.out.println("board = " + board.get());
+
                 message = "게시글 작성에 성공하였습니다.";
             }else{
                 message = "해당 게시물을 찾을 수 없습니다. 관리자에게 문의하세요";
             }
         }
 
-        // model에 메시지 추가
-        if (message != null && !message.isEmpty()) {
-            model.addAttribute("message", message);
+        // 게시글 작성후 write 페이지 로드시 model에 메시지 추가
+        if("write".equals(mode)){
+            if (message != null && !message.isEmpty()) {
+                model.addAttribute("message", message);
+            }
         }
+        System.out.println("message = " + message);
 
-        System.out.println("message = " + message);  // 모델에 값이 제대로 설정되었는지 확인
         return "/board/write";
     }
 
@@ -78,7 +90,7 @@ public class BoardController {
 
         // 게시글 작성 후 alert 띄워주고 작성한 게시물 보여주기
         if (boardEntity.getId() != null) {
-            return "redirect:/board/boardFindOne?id="+boardEntity.getId();
+            return "redirect:/board/boardFindOne?id="+boardEntity.getId()+"&mode=write";
         } else {
             return "redirect:/board/boardFindOne?";
         }
@@ -86,8 +98,11 @@ public class BoardController {
 
     //게시글 전체조회
     @GetMapping("/board/findAll")
-    public void boardFindAll(Model model){
+    public String boardFindAll(Model model){
 
+        List<BoardEntity> all = boardService.findAll();
+        model.addAttribute("boards", all);
+        return "board/findAll";
     }
 
 }

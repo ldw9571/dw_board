@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -29,6 +30,7 @@ public class BoardEntity {
     @CreatedDate
     @Column(nullable = false)
     private LocalDateTime dateTime;
+
 
     // dto => entity 변환 함수
     public BoardEntity exchange(BoardRequestDTO boardRequestDTO){
