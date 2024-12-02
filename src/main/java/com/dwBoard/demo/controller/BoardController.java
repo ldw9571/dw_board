@@ -109,10 +109,7 @@ public class BoardController {
     public String boardFindAll(@PageableDefault(page = 0, size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                Model model){
 
-        System.out.println("pageable = " + pageable);
-
         Page<BoardEntity> all = boardService.findAll(pageable);
-        System.out.println("all = " + all);
         model.addAttribute("boards", all);
         return "board/findAll";
     }
