@@ -4,6 +4,10 @@ import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -97,10 +101,18 @@ public class BoardController {
     }
 
     //게시글 전체조회
+    // @Pageable
+    // page = 현재 페이지 위치
+    // size = 페이지 크기
+    // sort = 정렬(String)
     @GetMapping("/board/findAll")
-    public String boardFindAll(Model model){
+    public String boardFindAll(@PageableDefault(page = 0, size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                               Model model){
 
-        List<BoardEntity> all = boardService.findAll();
+        System.out.println("pageable = " + pageable);
+
+        Page<BoardEntity> all = boardService.findAll(pageable);
+        System.out.println("all = " + all);
         model.addAttribute("boards", all);
         return "board/findAll";
     }

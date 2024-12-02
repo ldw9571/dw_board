@@ -1,6 +1,8 @@
 package com.dwBoard.demo.repository;
 
 import com.dwBoard.demo.entity.BoardEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,4 +13,6 @@ public interface BoardRepository {
     //Optinal : null일 경우 Optional로 감싸서 처리
     Optional<BoardEntity> findById(Long id);
     List<BoardEntity> findAll();
+
+    Page<BoardEntity> findAll(Pageable pageable);
 }

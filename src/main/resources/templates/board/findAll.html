@@ -17,21 +17,19 @@
             background-color: #f2f2f2;
         }
         tr {
-            cursor: pointer;  /* <tr>에 커서가 올라갔을 때 손 모양 커서 표시 */
+            cursor: pointer;
         }
         tr:hover {
-            background-color: #f9f9f9;  /* 마우스를 올렸을 때 배경색 변경 */
+            background-color: #f9f9f9;
         }
 
-        /* 게시글 목록 제목과 버튼을 같은 라인에 배치 */
         .header-container {
             display: flex;
-            justify-content: space-between;  /* 양 끝으로 요소 배치 */
-            align-items: center;  /* 세로 정렬 */
-            margin-bottom: 20px;  /* 제목과 테이블 간 여백 */
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
-        /* 버튼 스타일 */
         .button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -43,6 +41,52 @@
         }
         .button:hover {
             background-color: #0056b3;
+        }
+
+        /* 페이징 스타일 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            padding-left: 0;
+            margin-top: 20px;
+        }
+        .pagination .page-item {
+            margin: 0 5px;
+        }
+        .pagination .page-link {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #007bff;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .pagination .page-link:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        .pagination .page-item.disabled .page-link {
+            color: #ccc;
+            cursor: not-allowed;
+            background-color: #f8f9fa;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+
+        .pagination .page-item:first-child .page-link,
+        .pagination .page-item:last-child .page-link {
+            border-radius: 5px;
+        }
+
+        .pagination .page-item .page-link span {
+            font-size: 16px;
         }
     </style>
 </head>
@@ -64,21 +108,65 @@
     <tbody>
     <!-- 게시글 목록을 반복문으로 출력 -->
     <tr th:each="board : ${boards}" th:data-id="${board.id}">
-        <td th:text="${board.writer}"></td>  <!-- 작성자 -->
-        <td th:text="${board.title}"></td>   <!-- 제목 -->
-        <td th:text="${board.dateTime}"></td>  <!-- 시간 (예시로 createdAt 필드 사용) -->
+        <td th:text="${board.writer}"></td>
+        <td th:text="${board.title}"></td>
+        <td th:text="${board.dateTime}"></td>
     </tr>
     </tbody>
 </table>
+
+<div th:if="${!boards.isEmpty()}">
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            <!-- 첫 페이지로 이동 -->
+            <li th:classappend="${boards.first} ? 'disabled' : ''" class="page-item">
+                <a class="page-link" th:href="@{/board/findAll(page=0)}">
+                    <span>&laquo;</span>
+                    <span class="sr-only">맨처음</span>
+                </a>
+            </li>
+
+            <!-- 이전 페이지로 이동 -->
+            <li th:classappend="${boards.first} ? 'disabled' : ''" class="page-item">
+                <a class="page-link" th:href="@{/board/findAll(page=${boards.pageable.pageNumber - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&lt;</span>
+                    <span class="sr-only">이전</span>
+                </a>
+            </li>
+
+            <!-- 페이지 번호들 -->
+            <li th:each="page: ${#numbers.sequence(boards.pageable.pageNumber - 2 > 0 ? boards.pageable.pageNumber - 2 : 0,
+                                                 boards.pageable.pageNumber + 2 < boards.totalPages ? boards.pageable.pageNumber + 2 : boards.totalPages - 1)}"
+                th:classappend="${page == boards.pageable.pageNumber} ? 'active' : ''"
+                class="page-item">
+                <a th:text="${page + 1}" class="page-link" th:href="@{/board/findAll(page=${page})}"></a>
+            </li>
+
+            <!-- 다음 페이지로 이동 -->
+            <li th:classappend="${boards.last} ? 'disabled' : ''" class="page-item">
+                <a class="page-link" th:href="@{/board/findAll(page=${boards.pageable.pageNumber + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&gt;</span>
+                    <span class="sr-only">다음</span>
+                </a>
+            </li>
+
+            <!-- 마지막 페이지로 이동 -->
+            <li th:classappend="${boards.last} ? 'disabled' : ''" class="page-item">
+                <a class="page-link" th:href="@{/board/findAll(page=${boards.totalPages - 1})}">
+                    <span>&raquo;</span>
+                    <span class="sr-only">맨끝</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 <script type="text/javascript">
     // 각 <tr> 클릭 시 해당 게시글의 상세 페이지로 이동
     document.querySelectorAll("tr[data-id]").forEach(function(row) {
         row.addEventListener("click", function() {
-            // 게시글 ID를 추출하여 상세 페이지로 이동
             var boardId = row.getAttribute("data-id");
             if (boardId) {
-                // GET 요청으로 보내기 위해 URL 쿼리 매개변수를 올바르게 구성
                 window.location.href = "/board/boardFindOne?id=" + encodeURIComponent(boardId) + "&mode=view";
             }
         });

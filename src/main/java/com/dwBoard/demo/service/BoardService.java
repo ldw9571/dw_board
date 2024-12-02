@@ -4,6 +4,8 @@ import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -37,8 +39,8 @@ public class BoardService {
         return board;
     }
 
-    public List<BoardEntity> findAll() {
-        List<BoardEntity> boardAll = boardRepository.findAll();
+    public Page<BoardEntity> findAll(Pageable pageable) {
+        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
         return boardAll;
     }
 }
