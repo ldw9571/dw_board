@@ -1,6 +1,6 @@
 package com.dwBoard.demo;
 
-import com.dwBoard.demo.Entity.BoardEntity;
+import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.repository.BoardRepository;
 import com.dwBoard.demo.service.BoardService;

@@ -1,6 +1,6 @@
 package com.dwBoard.demo.repository;
 
-import com.dwBoard.demo.Entity.BoardEntity;
+import com.dwBoard.demo.entity.BoardEntity;
 
 import java.util.List;
 import java.util.Optional;

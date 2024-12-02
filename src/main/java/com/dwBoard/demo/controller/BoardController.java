@@ -1,6 +1,6 @@
 package com.dwBoard.demo.controller;
 
-import com.dwBoard.demo.Entity.BoardEntity;
+import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
