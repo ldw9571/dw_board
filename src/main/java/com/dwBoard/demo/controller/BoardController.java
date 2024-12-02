@@ -1,5 +1,6 @@
 package com.dwBoard.demo.controller;
 
+import com.dwBoard.demo.dto.BoardResponseDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
@@ -106,10 +107,10 @@ public class BoardController {
     // size = 페이지 크기
     // sort = 정렬(String)
     @GetMapping("/board/findAll")
-    public String boardFindAll(@PageableDefault(page = 0, size = 1, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+    public String boardFindAll(@PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
                                Model model){
 
-        Page<BoardEntity> all = boardService.findAll(pageable);
+        Page<BoardResponseDTO> all = boardService.findAll(pageable);
         model.addAttribute("boards", all);
         return "board/findAll";
     }

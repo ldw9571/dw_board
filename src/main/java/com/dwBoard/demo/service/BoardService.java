@@ -1,5 +1,6 @@
 package com.dwBoard.demo.service;
 
+import com.dwBoard.demo.dto.BoardResponseDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.repository.BoardRepository;
@@ -26,7 +27,7 @@ public class BoardService {
     public BoardEntity write(BoardRequestDTO boardRequestDTO){
 
         //DTO => ENTITY
-        BoardEntity dtoExchangeEntity= new BoardEntity();
+        BoardEntity dtoExchangeEntity = new BoardEntity();
         BoardEntity exchangeDtoToEntity = dtoExchangeEntity.exchange(boardRequestDTO);
 
 
@@ -34,13 +35,36 @@ public class BoardService {
         return boardEntity;
     }
 
+    //게시글 단일조회
     public Optional<BoardEntity> findById(Long id) {
         Optional<BoardEntity> board = boardRepository.findById(id);
         return board;
     }
 
-    public Page<BoardEntity> findAll(Pageable pageable) {
+    //게시글 전체조회
+    public Page<BoardResponseDTO> findAll(Pageable pageable) {
         Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
-        return boardAll;
+
+        // BoardEntity -> BoardResponseDTO 변환
+        Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {
+            BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
+
+            // 추후 build 로 변경 필요
+            boardResponseDTO.setId(boardEntity.getId());
+            boardResponseDTO.setTitle(boardEntity.getTitle());
+            boardResponseDTO.setContent(boardEntity.getContent());
+            boardResponseDTO.setWriter(boardEntity.getWriter());
+
+            // LocalDateTime으로 보여지는 부분 date string으로 변경하여 전달
+            boardResponseDTO.setDate(boardEntity.getDateTime());
+
+            return boardResponseDTO;
+        });
+
+        return boardResponseDTOPage;
     }
+
+
+
+
 }
