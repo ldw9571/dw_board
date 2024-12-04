@@ -1,3 +1,10 @@
+//Querydsl 설정 (plugins 앞에 해야함)
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.0'
@@ -25,12 +32,7 @@ repositories {
 	mavenCentral()
 }
 
-//Querydsl 설정
-buildscript {
-	ext {
-		queryDslVersion = "5.0.0"
-	}
-}
+
 
 dependencies {
 	//jpa
@@ -45,5 +47,21 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// QueryDsl
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 }
 
+
+//Querydsl
+sourceSets {
+
+	main {
+		java {
+			srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+		}
+	}
+}
