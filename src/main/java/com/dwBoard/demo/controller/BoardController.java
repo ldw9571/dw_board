@@ -108,6 +108,8 @@ public class BoardController {
     // sort = 정렬(String)
     @GetMapping("/board/findAll")
     public String boardFindAll(@PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
+                               @RequestParam(value = "searchType",required = false) String searchType,
+                               @RequestParam(value = "searchText",required = false) String searchText,
                                Model model){
 
         Page<BoardResponseDTO> all = boardService.findAll(pageable);
