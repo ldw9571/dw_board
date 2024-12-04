@@ -1,10 +1,11 @@
 package com.dwBoard.demo.service;
 
 import com.dwBoard.demo.dto.BoardResponseDTO;
-import com.dwBoard.demo.dto.SearchDTO;
+import com.dwBoard.demo.dto.RequestSearchDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.repository.BoardRepository;
+import org.eclipse.jdt.internal.compiler.lookup.SourceTypeBinding;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -12,7 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import javax.lang.model.SourceVersion;
 import java.util.Optional;
 
 @Service
@@ -45,7 +46,7 @@ public class BoardService {
     }
 
     //게시글 전체조회
-    public Page<BoardResponseDTO> findAll(SearchDTO searchDTO, String sort, String orderBy) {
+    public Page<BoardResponseDTO> findAll(RequestSearchDTO requestSearchDTO, String sort, String orderBy) {
 
         //기본 오름차순 = DESC
         Sort.Direction defalutSort = Sort.Direction.DESC;
@@ -63,14 +64,30 @@ public class BoardService {
 
         //페이징
         //PageRequest(페이지수,한페이지갯수,Sort.by(차순,정렬기준)
-        Pageable pageable = PageRequest.of(searchDTO.getPage() - 1, searchDTO.getRecordSize(), Sort.by(defalutSort,sort));
+        Pageable pageable = PageRequest.of(requestSearchDTO.getPage() - 1, requestSearchDTO.getRecordSize(), Sort.by(defalutSort,sort));
 
-        System.out.println("getSearchType = " + searchDTO.getSearchType());
-        System.out.println("getSearchText = " + searchDTO.getSearchText());
+        System.out.println("getSearchType = " + requestSearchDTO.getSearchType());
+        System.out.println("getSearchText = " + requestSearchDTO.getSearchText());
 
-        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(), searchDTO.getSearchText(), pageable);
-//        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
 
+        // 검색이 없을 때, findAll 호출
+        Page<BoardEntity> boardAll;
+        if (requestSearchDTO.getSearchType() == null || requestSearchDTO.getSearchText() == null || requestSearchDTO.getSearchType().isEmpty()|| requestSearchDTO.getSearchText().isEmpty()) {
+            boardAll = boardRepository.findAll(pageable);
+        //검색있는경우
+        }else{
+            System.out.println("---------------------------------------------------");
+            System.out.println("getSearchType = " + requestSearchDTO.getSearchType());
+            System.out.println("getSearchText = " + requestSearchDTO.getSearchText());
+
+            boardAll = boardRepository.findBySearchTextAndType(
+                    requestSearchDTO.getSearchText(),
+                    requestSearchDTO.getSearchType(),
+                    pageable
+            );
+        }
+
+        System.out.println("boardAll = " + boardAll);
         // BoardEntity -> BoardResponseDTO 변환
         Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {
             BoardResponseDTO boardResponseDTO = new BoardResponseDTO();

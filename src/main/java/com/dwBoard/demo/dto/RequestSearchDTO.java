@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SearchDTO {
+public class RequestSearchDTO {
 
     private int page;             // 현재 페이지 번호
     private int recordSize;       // 페이지당 출력할 데이터 개수
@@ -13,7 +13,7 @@ public class SearchDTO {
     private String searchText;       // 검색 키워드
     private String searchType;    // 검색 유형
 
-    public SearchDTO() {
+    public RequestSearchDTO() {
         this.page = 1;
         this.recordSize = 10;
         this.pageSize = 5;

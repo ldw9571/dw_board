@@ -1,23 +1,19 @@
 package com.dwBoard.demo.controller;
 
 import com.dwBoard.demo.dto.BoardResponseDTO;
-import com.dwBoard.demo.dto.SearchDTO;
+import com.dwBoard.demo.dto.RequestSearchDTO;
+import com.dwBoard.demo.dto.ResponseSearchDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -110,13 +106,31 @@ public class BoardController {
     // sort = 정렬
     // orderBy = 순차
     @GetMapping("/board/findAll")
-    public String boardFindAll(SearchDTO searchDTO,
+    public String boardFindAll(RequestSearchDTO requestSearchDTO,
                                @RequestParam(value = "sort",required = false) String sort,
                                @RequestParam(value = "orderBy",required = false) String orderBy,
                                Model model){
 
-        Page<BoardResponseDTO> all = boardService.findAll(searchDTO,sort,orderBy);
+        //전체조회
+        Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO,sort,orderBy);
         model.addAttribute("boards", all);
+
+        // model에 담을 pageDTO
+        ResponseSearchDTO responseSearchDTO = new ResponseSearchDTO();
+
+        responseSearchDTO.setPage(requestSearchDTO.getPage());
+        responseSearchDTO.setRecordSize(requestSearchDTO.getRecordSize());
+        responseSearchDTO.setPageSize(requestSearchDTO.getPageSize());
+        responseSearchDTO.setSearchType(requestSearchDTO.getSearchType());
+        responseSearchDTO.setSearchText(requestSearchDTO.getSearchText());
+        responseSearchDTO.setSort(sort != null ? sort : "");
+        responseSearchDTO.setOrderBy(orderBy != null ? orderBy : "");
+
+        // 모델에 ResponseSearchDTO 추가
+        model.addAttribute("searchDTO", responseSearchDTO);
+
+
+
         return "board/findAll";
     }
 

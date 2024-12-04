@@ -120,32 +120,41 @@
     <a href="/board/write" class="button">게시글 작성</a>
 </div>
 
-<!-- 검색 및 정렬 기능 추가 -->
 <div class="search-container">
     <form action="/board/findAll" method="get">
+        <!-- 검색 옵션 -->
         <select name="searchType" id="searchType">
-            <option value="" th:selected="${searchType == ''}">검색옵션선택</option>
-            <option value="title" th:selected="${searchType == 'title'}">제목</option>
-            <option value="content" th:selected="${searchType == 'content'}">내용</option>
-            <option value="writer" th:selected="${searchType == 'writer'}">작성자</option>
+            <option value="" th:selected="${searchDTO.searchType == ''}">검색옵션선택</option>
+            <option value="title" th:selected="${searchDTO.searchType == 'title'}">제목</option>
+            <option value="content" th:selected="${searchDTO.searchType == 'content'}">내용</option>
+            <option value="writer" th:selected="${searchDTO.searchType == 'writer'}">작성자</option>
         </select>
+
+        <!-- 검색어 입력 -->
         <input type="text" name="searchText" placeholder="검색어 입력"
-               th:value="${searchText != null ? searchText : ''}">
+               th:value="${searchDTO.searchText != null ? searchDTO.searchText : ''}">
+
+        <!-- 정렬 기준 -->
         <select name="sort" id="sort">
-            <option value="" th:selected="${sort == ''}">순서목록</option>
-            <option value="title" th:selected="${sort == 'title'}">제목순</option>
-            <option value="dateTime" th:selected="${sort == 'dateTime'}">시간순</option>
+            <option value="" th:selected="${searchDTO.sort == ''}">순서목록</option>
+            <option value="title" th:selected="${searchDTO.sort == 'title'}">제목순</option>
+            <option value="dateTime" th:selected="${searchDTO.sort == 'dateTime'}">시간순</option>
         </select>
+
+        <!-- 정렬 방향 -->
         <select name="orderBy" id="orderBy">
-            <option value="" th:selected="${orderBy == ''}">순차</option>
-            <option value="asc" th:selected="${orderBy == 'asc'}">▲</option>
-            <option value="desc" th:selected="${orderBy == 'desc'}">▼</option>
+            <option value="" th:selected="${searchDTO.orderBy == ''}">순차</option>
+            <option value="asc" th:selected="${searchDTO.orderBy == 'asc'}">▲</option>
+            <option value="desc" th:selected="${searchDTO.orderBy == 'desc'}">▼</option>
         </select>
+
+        <!-- 페이지 크기 -->
         <input type="text" name="recordSize" placeholder="페이지수" style="width: 60px;"
-               th:value="${recordSize != null ? recordSize : '10'}">
+               th:value="${searchDTO.recordSize != null ? searchDTO.recordSize : 10}">
         <button type="submit" class="button">검색</button>
     </form>
 </div>
+
 
 <table>
     <colgroup>

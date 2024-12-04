@@ -1,11 +1,11 @@
-package com.dwBoard.demo;
+package com.dwBoard.demo.config;
 
 import com.dwBoard.demo.repository.BoardRepository;
 import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-//의존성 설정
 @Configuration
 public class SpringConfig {
 
@@ -16,8 +16,8 @@ public class SpringConfig {
         this.boardRepository = boardRepository;
     }
 
-    public BoardService boardService(){
-        return new BoardService(boardRepository);
+    @Bean
+    public BoardService boardService() {
+        return new BoardService(boardRepository);  // JPAQueryFactory를 함께 주입
     }
-
 }

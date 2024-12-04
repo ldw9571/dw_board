@@ -20,9 +20,7 @@ public interface BoardRepository {
 
 
     @Query("SELECT b FROM BoardEntity b WHERE "
-            + "(:searchType = 'title' AND b.title LIKE CONCAT('%', :searchText, '%')) "
-            + "OR (:searchType = 'writer' AND b.writer LIKE CONCAT('%', :searchText, '%')) "
-            + "OR (:searchType = 'content' AND b.content LIKE CONCAT('%', :searchText, '%'))")
+            + "(b.title LIKE CONCAT('%', :searchText, '%'))")
     Page<BoardEntity> findBySearchTextAndType(@Param("searchText") String searchText,
                                               @Param("searchType") String searchType,
                                               Pageable pageable);
