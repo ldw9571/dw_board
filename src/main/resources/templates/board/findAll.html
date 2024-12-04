@@ -137,11 +137,11 @@
         </select>
         <select name="orderBy" id="orderBy">
             <option value="" th:selected="${orderBy == ''}">순차</option>
-            <option value="title" th:selected="${orderBy == 'asc'}">▲</option>
-            <option value="dateTime" th:selected="${orderBy == 'desc'}">▼</option>
+            <option value="asc" th:selected="${orderBy == 'asc'}">▲</option>
+            <option value="desc" th:selected="${orderBy == 'desc'}">▼</option>
         </select>
-        <input type="text" name="pageSize" placeholder="페이지수" style="width: 60px;"
-               th:value="${pageSize != null ? pageSize : ''}">
+        <input type="text" name="recordSize" placeholder="페이지수" style="width: 60px;"
+               th:value="${recordSize != null ? recordSize : '10'}">
         <button type="submit" class="button">검색</button>
     </form>
 </div>

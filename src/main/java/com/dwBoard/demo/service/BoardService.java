@@ -1,12 +1,15 @@
 package com.dwBoard.demo.service;
 
 import com.dwBoard.demo.dto.BoardResponseDTO;
+import com.dwBoard.demo.dto.SearchDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.repository.BoardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -42,8 +45,30 @@ public class BoardService {
     }
 
     //게시글 전체조회
-    public Page<BoardResponseDTO> findAll(Pageable pageable) {
-        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
+    public Page<BoardResponseDTO> findAll(SearchDTO searchDTO, String sort, String orderBy) {
+
+        //기본 오름차순 = DESC
+        Sort.Direction defalutSort = Sort.Direction.DESC;
+
+        // orderBy가 "asc"인 경우 오름차순으로 설정
+        if ("asc".equalsIgnoreCase(orderBy)) {
+            defalutSort = Sort.Direction.ASC;
+        }
+
+
+        // 기본 정렬기준 = 시간순
+        if (sort == null || sort.isEmpty()) {
+            sort = "dateTime";
+        }
+
+        //페이징
+        //PageRequest(페이지수,한페이지갯수,Sort.by(차순,정렬기준)
+        Pageable pageable = PageRequest.of(searchDTO.getPage() - 1, searchDTO.getRecordSize(), Sort.by(defalutSort,sort));
+
+
+
+
+        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(),searchDTO.getSearchText(),pageable);
 
         // BoardEntity -> BoardResponseDTO 변환
         Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {

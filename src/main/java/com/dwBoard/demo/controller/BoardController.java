@@ -1,11 +1,13 @@
 package com.dwBoard.demo.controller;
 
 import com.dwBoard.demo.dto.BoardResponseDTO;
+import com.dwBoard.demo.dto.SearchDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -105,14 +107,15 @@ public class BoardController {
     // @Pageable
     // page = 현재 페이지 위치
     // size = 페이지 크기
-    // sort = 정렬(String)
+    // sort = 정렬
+    // orderBy = 순차
     @GetMapping("/board/findAll")
-    public String boardFindAll(@PageableDefault(page = 0, size = 3, sort = "id", direction = Sort.Direction.ASC) Pageable pageable,
-                               @RequestParam(value = "searchType",required = false) String searchType,
-                               @RequestParam(value = "searchText",required = false) String searchText,
+    public String boardFindAll(SearchDTO searchDTO,
+                               @RequestParam(value = "sort",required = false) String sort,
+                               @RequestParam(value = "orderBy",required = false) String orderBy,
                                Model model){
 
-        Page<BoardResponseDTO> all = boardService.findAll(pageable);
+        Page<BoardResponseDTO> all = boardService.findAll(searchDTO,sort,orderBy);
         model.addAttribute("boards", all);
         return "board/findAll";
     }
