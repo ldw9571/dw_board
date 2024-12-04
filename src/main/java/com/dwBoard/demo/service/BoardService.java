@@ -68,8 +68,8 @@ public class BoardService {
         System.out.println("getSearchType = " + searchDTO.getSearchType());
         System.out.println("getSearchText = " + searchDTO.getSearchText());
 
-//        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(), searchDTO.getSearchText(), pageable);
-        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
+        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(), searchDTO.getSearchText(), pageable);
+//        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
 
         // BoardEntity -> BoardResponseDTO 변환
         Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {

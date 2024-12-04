@@ -25,6 +25,13 @@ repositories {
 	mavenCentral()
 }
 
+//Querydsl 설정
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 dependencies {
 	//jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
