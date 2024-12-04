@@ -3,27 +3,11 @@ package com.dwBoard.demo.repository;
 import com.dwBoard.demo.entity.BoardEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
+public interface BoardRepository extends JpaRepository<BoardEntity, Long>, BoardRepositoryCustom {
 
-public interface BoardRepository {
-
-    BoardEntity save(BoardEntity boardRequestDTO);
-    //Optinal : null일 경우 Optional로 감싸서 처리
-    Optional<BoardEntity> findById(Long id);
-    List<BoardEntity> findAll();
-
+    // 기본적인 CRUD와 페이징을 위한 메서드
     Page<BoardEntity> findAll(Pageable pageable);
-
-
-    @Query("SELECT b FROM BoardEntity b WHERE "
-            + "(b.title LIKE CONCAT('%', :searchText, '%'))")
-    Page<BoardEntity> findBySearchTextAndType(@Param("searchText") String searchText,
-                                              @Param("searchType") String searchType,
-                                              Pageable pageable);
-
 
 }

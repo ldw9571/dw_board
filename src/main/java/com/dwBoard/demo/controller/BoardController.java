@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.lang.model.SourceVersion;
 import java.util.Optional;
 
 @Controller
@@ -111,6 +112,7 @@ public class BoardController {
                                @RequestParam(value = "orderBy",required = false) String orderBy,
                                Model model){
 
+        System.out.println("requestSearchDTO.getPage() = " + requestSearchDTO.getPage());
         //전체조회
         Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO,sort,orderBy);
         model.addAttribute("boards", all);
