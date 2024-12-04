@@ -65,10 +65,11 @@ public class BoardService {
         //PageRequest(페이지수,한페이지갯수,Sort.by(차순,정렬기준)
         Pageable pageable = PageRequest.of(searchDTO.getPage() - 1, searchDTO.getRecordSize(), Sort.by(defalutSort,sort));
 
+        System.out.println("getSearchType = " + searchDTO.getSearchType());
+        System.out.println("getSearchText = " + searchDTO.getSearchText());
 
-
-
-        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(),searchDTO.getSearchText(),pageable);
+//        Page<BoardEntity> boardAll = boardRepository.findBySearchTextAndType(searchDTO.getSearchType(), searchDTO.getSearchText(), pageable);
+        Page<BoardEntity> boardAll = boardRepository.findAll(pageable);
 
         // BoardEntity -> BoardResponseDTO 변환
         Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {

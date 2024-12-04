@@ -16,11 +16,14 @@ public interface BoardRepository {
     Optional<BoardEntity> findById(Long id);
     List<BoardEntity> findAll();
 
-    @Query("SELECT b FROM BoardEntity b WHERE "
-            + "( :searchType = 'title' AND b.title LIKE %:searchText%) "
-            + "OR ( :searchType = 'writer' AND b.writer LIKE %:searchText%) "
-            + "OR ( :searchType = 'content' AND b.content LIKE %:searchText%)")
-    Page<BoardEntity> findBySearchTextAndType(@Param("searchText") String searchText,
-                                              @Param("searchType") String searchType,
-                                              Pageable pageable);
+    Page<BoardEntity> findAll(Pageable pageable);
+
+
+//    @Query("SELECT b FROM BoardEntity b WHERE "
+//            + "( :searchType = 'title' AND b.title LIKE %:searchText%) "
+//            + "OR ( :searchType = 'writer' AND b.writer LIKE %:searchText%) "
+//            + "OR ( :searchType = 'content' AND b.content LIKE %:searchText%)")
+//    Page<BoardEntity> findBySearchTextAndType(@Param("searchText") String searchText,
+//                                              @Param("searchType") String searchType,
+//                                              Pageable pageable);
 }
