@@ -149,16 +149,18 @@
 <table>
     <thead>
     <tr>
-        <th>작성자</th>
         <th>제목</th>
+        <th>내용</th>
+        <th>작성자</th>
         <th>시간</th>
     </tr>
     </thead>
     <tbody>
     <!-- 게시글 목록을 반복문으로 출력 -->
     <tr th:each="board : ${boards}" th:data-id="${board.id}">
-        <td th:text="${board.writer}"></td>
         <td th:text="${board.title}"></td>
+        <td th:text="${board.content}"></td>
+        <td th:text="${board.writer}"></td>
         <td th:text="${board.dateTime}"></td>
     </tr>
     </tbody>
