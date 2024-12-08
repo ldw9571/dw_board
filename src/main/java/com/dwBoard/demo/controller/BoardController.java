@@ -108,13 +108,17 @@ public class BoardController {
     // orderBy = 순차
     @GetMapping("/board/findAll")
     public String boardFindAll(RequestSearchDTO requestSearchDTO,
-                               @RequestParam(value = "sort",required = false) String sort,
-                               @RequestParam(value = "orderBy",required = false) String orderBy,
-                               Model model){
+                               @RequestParam(value = "sort", required = false) String sort,
+                               @RequestParam(value = "orderBy", required = false) String orderBy,
+                               Model model) {
 
-        System.out.println("requestSearchDTO.getPage() = " + requestSearchDTO.getPage());
-        //전체조회
-        Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO,sort,orderBy);
+        // 페이지 번호가 0 미만일 경우 0으로 설정
+        if (requestSearchDTO.getPage() < 0) {
+            requestSearchDTO.setPage(0);
+        }
+
+        // 전체조회
+        Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO, sort, orderBy);
         model.addAttribute("boards", all);
 
         // model에 담을 pageDTO
@@ -131,9 +135,8 @@ public class BoardController {
         // 모델에 ResponseSearchDTO 추가
         model.addAttribute("searchDTO", responseSearchDTO);
 
-
-
         return "board/findAll";
     }
+
 
 }
