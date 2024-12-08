@@ -48,38 +48,20 @@ public class BoardService {
     //게시글 전체조회
     public Page<BoardResponseDTO> findAll(RequestSearchDTO requestSearchDTO, String sort, String orderBy) {
 
-        //기본 오름차순 = DESC
-        Sort.Direction defalutSort = Sort.Direction.DESC;
+        // 기본 정렬 기준: DESC, 기본 기준: dateTime
+        Sort.Direction sortDirection = "asc".equalsIgnoreCase(orderBy) ? Sort.Direction.ASC : Sort.Direction.DESC;
+        sort = (sort == null || sort.isEmpty()) ? "dateTime" : sort;
 
-        // orderBy가 "asc"인 경우 오름차순으로 설정
-        if ("asc".equalsIgnoreCase(orderBy)) {
-            defalutSort = Sort.Direction.ASC;
-        }
+        // 페이징 및 정렬 설정
+        Pageable pageable = PageRequest.of(requestSearchDTO.getPage() - 1, requestSearchDTO.getRecordSize(), Sort.by(sortDirection, sort));
 
-
-        // 기본 정렬기준 = 시간순
-        if (sort == null || sort.isEmpty()) {
-            sort = "dateTime";
-        }
-
-        //페이징
-        //PageRequest(페이지수,한페이지갯수,Sort.by(차순,정렬기준)
-        Pageable pageable = PageRequest.of(requestSearchDTO.getPage() - 1, requestSearchDTO.getRecordSize(), Sort.by(defalutSort,sort));
-
-        System.out.println("getSearchType = " + requestSearchDTO.getSearchType());
-        System.out.println("getSearchText = " + requestSearchDTO.getSearchText());
-
-
-        // 검색이 없을 때, findAll 호출
+        // 검색 조건이 없을 경우 findAll 호출
         Page<BoardEntity> boardAll;
-        if (requestSearchDTO.getSearchType() == null || requestSearchDTO.getSearchText() == null || requestSearchDTO.getSearchType().isEmpty()|| requestSearchDTO.getSearchText().isEmpty()) {
+        if (requestSearchDTO.getSearchType() == null || requestSearchDTO.getSearchText() == null ||
+                requestSearchDTO.getSearchType().isEmpty() || requestSearchDTO.getSearchText().isEmpty()) {
             boardAll = boardRepository.findAll(pageable);
-        //검색있는경우
-        }else{
-            System.out.println("---------------------------------------------------");
-            System.out.println("getSearchType = " + requestSearchDTO.getSearchType());
-            System.out.println("getSearchText = " + requestSearchDTO.getSearchText());
-
+        } else {
+            // 검색 조건이 있을 경우
             boardAll = boardRepository.findBySearchTextAndType(
                     requestSearchDTO.getSearchText(),
                     requestSearchDTO.getSearchType(),
@@ -87,27 +69,8 @@ public class BoardService {
             );
         }
 
-        System.out.println("boardAll = " + boardAll);
         // BoardEntity -> BoardResponseDTO 변환
-        Page<BoardResponseDTO> boardResponseDTOPage = boardAll.map(boardEntity -> {
-            BoardResponseDTO boardResponseDTO = new BoardResponseDTO();
-
-            // 추후 build 로 변경 필요
-            boardResponseDTO.setId(boardEntity.getId());
-            boardResponseDTO.setTitle(boardEntity.getTitle());
-            boardResponseDTO.setContent(boardEntity.getContent());
-            boardResponseDTO.setWriter(boardEntity.getWriter());
-
-            // LocalDateTime으로 보여지는 부분 date string으로 변경하여 전달
-            boardResponseDTO.setDate(boardEntity.getDateTime());
-
-            return boardResponseDTO;
-        });
-
-        return boardResponseDTOPage;
+        return boardAll.map(boardEntity -> new BoardResponseDTO(boardEntity));
     }
-
-
-
 
 }

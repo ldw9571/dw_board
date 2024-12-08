@@ -1,5 +1,6 @@
 package com.dwBoard.demo.dto;
 
+import com.dwBoard.demo.entity.BoardEntity;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,6 +17,9 @@ public class BoardResponseDTO {
     private String content;
     private String writer;
     private String dateTime;
+
+    public BoardResponseDTO(BoardEntity boardEntity) {
+    }
 
     // LocalDateTime을 받아서 String 형태로 변환
     public void setDate(LocalDateTime writerDateTime) {

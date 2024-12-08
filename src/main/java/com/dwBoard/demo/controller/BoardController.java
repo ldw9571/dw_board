@@ -47,58 +47,58 @@ public class BoardController {
         return "/board/write";
     }
 
-    //게시글 작성 페이지 load
-    //@param : mode - write: 작성 후 페이지 로드
-    //              - view : 단건 조회
-    @GetMapping("/board/boardFindOne")
-    public String boardFindOne(@RequestParam(value = "id",required = false) Long id,
-                               @RequestParam(value = "mode",required = false) String mode,
-                                 Model model){
-
-        System.out.println("id = " + id);
-        System.out.println("mode = " + mode);
-
-        //결과에 따른 alert message
-        String message = "";
-
-        if(id != null){
-            Optional<BoardEntity> board = boardService.findById(id);
-            if(board.isPresent()){
-                model.addAttribute("board",board.get());
-                System.out.println("board = " + board.get());
-
-                message = "게시글 작성에 성공하였습니다.";
-            }else{
-                message = "해당 게시물을 찾을 수 없습니다. 관리자에게 문의하세요";
-            }
-        }
-
-        // 게시글 작성후 write 페이지 로드시 model에 메시지 추가
-        if("write".equals(mode)){
-            if (message != null && !message.isEmpty()) {
-                model.addAttribute("message", message);
-            }
-        }
-        System.out.println("message = " + message);
-
-        return "/board/write";
-    }
-
-
-    //게시글 작성
-    @PostMapping("/board/write")
-    public String boardWrite(BoardRequestDTO boardRequestDTO, Model model){
-
-        //게시글 저장처리
-        BoardEntity boardEntity = boardService.write(boardRequestDTO);
-
-        // 게시글 작성 후 alert 띄워주고 작성한 게시물 보여주기
-        if (boardEntity.getId() != null) {
-            return "redirect:/board/boardFindOne?id="+boardEntity.getId()+"&mode=write";
-        } else {
-            return "redirect:/board/boardFindOne?";
-        }
-    }
+//    //게시글 작성 페이지 load
+//    //@param : mode - write: 작성 후 페이지 로드
+//    //              - view : 단건 조회
+//    @GetMapping("/board/boardFindOne")
+//    public String boardFindOne(@RequestParam(value = "id",required = false) Long id,
+//                               @RequestParam(value = "mode",required = false) String mode,
+//                                 Model model){
+//
+//        System.out.println("id = " + id);
+//        System.out.println("mode = " + mode);
+//
+//        //결과에 따른 alert message
+//        String message = "";
+//
+//        if(id != null){
+//            Optional<BoardEntity> board = boardService.findById(id);
+//            if(board.isPresent()){
+//                model.addAttribute("board",board.get());
+//                System.out.println("board = " + board.get());
+//
+//                message = "게시글 작성에 성공하였습니다.";
+//            }else{
+//                message = "해당 게시물을 찾을 수 없습니다. 관리자에게 문의하세요";
+//            }
+//        }
+//
+//        // 게시글 작성후 write 페이지 로드시 model에 메시지 추가
+//        if("write".equals(mode)){
+//            if (message != null && !message.isEmpty()) {
+//                model.addAttribute("message", message);
+//            }
+//        }
+//        System.out.println("message = " + message);
+//
+//        return "/board/write";
+//    }
+//
+//
+//    //게시글 작성
+//    @PostMapping("/board/write")
+//    public String boardWrite(BoardRequestDTO boardRequestDTO, Model model){
+//
+//        //게시글 저장처리
+//        BoardEntity boardEntity = boardService.write(boardRequestDTO);
+//
+//        // 게시글 작성 후 alert 띄워주고 작성한 게시물 보여주기
+//        if (boardEntity.getId() != null) {
+//            return "redirect:/board/boardFindOne?id="+boardEntity.getId()+"&mode=write";
+//        } else {
+//            return "redirect:/board/boardFindOne?";
+//        }
+//    }
 
     //게시글 전체조회
     // @Pageable

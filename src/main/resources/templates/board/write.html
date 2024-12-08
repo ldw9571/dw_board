@@ -55,6 +55,7 @@
             text-align: center;
         }
     </style>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
 <div class="container">
@@ -66,10 +67,9 @@
     </script>
   </th:block>
 
-
   <h1>게시글 작성</h1>
 
-  <form action="/board/write" method="POST">
+  <form id="boardForm">
     <label for="title">제목</label>
     <input type="text" id="title" name="title" placeholder="제목을 입력하세요"
            th:value="${board != null ? board.title : ''}" required>
@@ -82,17 +82,51 @@
     <textarea id="content" name="content" rows="10" placeholder="내용을 입력하세요" required
               th:text="${board != null ? board.content : ''}"></textarea>
 
-    <th:block th:if="${board == null}">
-      <button type="submit">작성하기</button>
-    </th:block>
+    <button type="submit" id="submitButton" style="display: ${board != null ? 'none' : 'block'};">작성하기</button>
 
-    <!-- /board/findAll로 이동하는 버튼 추가 -->
+    <!-- 게시글 목록 보기 -->
     <a href="/board/findAll">
       <button type="button" style="background-color: #28a745; width: 100%;">게시글 목록 보기</button>
     </a>
-
   </form>
 
+  <div id="errorMessage" class="error" style="display: none;"></div>
+  <div id="successMessage" class="message" style="display: none;"></div>
+
 </div>
+
+<script>
+    // 폼 제출 시 AJAX로 데이터 전송
+    $('#boardForm').on('submit', function(e) {
+        e.preventDefault();
+
+        const formData = {
+            title: $('#title').val(),
+            writer: $('#writer').val(),
+            content: $('#content').val()
+        };
+
+        // AJAX 요청
+        $.ajax({
+            url: '/api/board/write',  // API URL
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                // 성공 메시지 표시
+                alert("게시글 작성 완료");
+                $('#errorMessage').hide();
+                $('#submitButton').hide();  // 게시글 작성 완료 후 버튼 숨김
+
+            },
+            error: function(xhr, status, error) {
+                const errorResponse = JSON.parse(xhr.responseText);
+                $('#errorMessage').text(errorResponse.message).show();
+                $('#successMessage').hide();
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
