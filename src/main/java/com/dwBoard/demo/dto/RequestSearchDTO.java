@@ -15,7 +15,7 @@ public class RequestSearchDTO {
 
     public RequestSearchDTO() {
         this.page = 1;
-        this.recordSize = 2;
+        this.recordSize = 5;
         this.pageSize = 5;
     }
 
