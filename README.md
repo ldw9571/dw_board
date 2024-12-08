@@ -1,9 +1,8 @@
 Read Me 추가
 
-
+----------------------------java 버전 별 차이-------------------------------
 LTS(Long-Term Support) 
 - 5년 이상 지원 기간 제공
-
 
 
 Java 8 (2014년 3월 출시) → 가장 널리 사용되는 LTS 버전 중 하나로, 2025년까지 지원
@@ -80,4 +79,27 @@ Java 21 (2023년 9월 출시) → 2031년까지 지원
 - Java 플랫폼에 경량 가상 스레드 도입
 
 - UTF- 8 기본값
+
+
+----------------------------유효성검사 spring validation-------------------------------
+validation : 검증
+-올바르지 않은 데이터를 걸러내고 보안 유지를 위해
+-client 데이터는 조작이 쉽고 정상적 방식의 데이터만 들어오는 것이 아니기에 client side 뿐만 아니라 server side에서도 필요
+
+@Valid : java 지원 어노테이션
+@Validated : Spring 지원 어노테이션
+@Validated는 @Valid 기능 포함, 유효성 검토할 그룹 지정할 수 있는 기능 추가로 가지고 이다.
+
+Bean validation : 클래스 필드에 특정 annotation을 적용하여 필드가 갖는 제약조건을 정의하는 구조로 이루어진 검사 
+
+1.gradle 추가
+implementation 'org.springframework.boot:spring-boot-starter-validation'
+ㄴ3.x 버전은 버전 명시하지 않아도 Spring Boot Dependency Management가 자동으로 적합한 버전 설정
+
+2. RequestDTO @NotBlank(message = "Title is required.") 등 어노테이션으로 검증 추가
+   validation 유효성 검사 어노테이션
+   https://epozen-dt.github.io/vaid_validated_annotattion/
+
+3. Contoller에서 유효성 검사 적용할 API의 Request 앞에 @Validated 어노테이션 추가
+
 
