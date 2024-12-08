@@ -103,3 +103,18 @@ implementation 'org.springframework.boot:spring-boot-starter-validation'
 3. Contoller에서 유효성 검사 적용할 API의 Request 앞에 @Validated 어노테이션 추가
 
 
+----------------------------API 서버-------------------------------
+API : 두 관계 간에 데이터를 주고받을 수 있도록 고안된 인터페이스
+
+요청(Request)
+-GET: 데이터를 조회
+-POST: 새로운 데이터를 생성
+-PUT: 기존 데이터를 수정
+-DELETE: 데이터를 삭제
+
+종류
+1.웹 API
+-HTTP/HTTPS 프로토콜 기반 API
+-RESTful API(HTTP 프로토콜을 통해 CRUD 작업 수행)
+-요청방식 : 동기(직렬적), 비동기(병렬적)
+-동기 : @Controller / 비동기 : @RestController

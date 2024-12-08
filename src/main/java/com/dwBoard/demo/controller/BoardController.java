@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.lang.model.SourceVersion;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -119,6 +120,14 @@ public class BoardController {
 
         // 전체조회
         Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO, sort, orderBy);
+
+        // all.getContent()로 실제 데이터를 가져옵니다.
+        List<BoardResponseDTO> contentList = all.getContent();
+
+        for (int i = 0; i < contentList.size(); i++) {
+            System.out.println("contentList.get(i).getContent() = " + contentList.get(i).getContent());
+        }
+
         model.addAttribute("boards", all);
 
         // model에 담을 pageDTO

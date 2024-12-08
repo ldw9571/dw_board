@@ -69,6 +69,11 @@ public class BoardService {
             );
         }
 
+        for (BoardEntity boardEntity : boardAll) {
+            System.out.println("Board Title: " + boardEntity.getTitle());
+            System.out.println("Board Content: " + boardEntity.getContent());
+            System.out.println("Created Date: " + boardEntity.getDateTime());
+        }
         // BoardEntity -> BoardResponseDTO 변환
         return boardAll.map(boardEntity -> new BoardResponseDTO(boardEntity));
     }
