@@ -116,5 +116,14 @@ API : 두 관계 간에 데이터를 주고받을 수 있도록 고안된 인터
 1.웹 API
 -HTTP/HTTPS 프로토콜 기반 API
 -RESTful API(HTTP 프로토콜을 통해 CRUD 작업 수행)
--요청방식 : 동기(직렬적), 비동기(병렬적)
--동기 : @Controller / 비동기 : @RestController
+
+@RestController
+-JSON 또는 XML 형태로 반환
+-HTTP 요청 본문에 담긴 데이터를 Java 객체로 변환하기 위해 @RequestBody 사용
+(RESTful API에서는 보통 객체 단위의 유효성 검사가 필요하며, 그룹별 검증이 필요할 경우가 드물기 때문에 @Validated보다는 @Valid가 더 간단하고 일반적으로 사용)
+
+
+@Controller
+-@Component 포함하여 컴포넌트 스캔에 의해 자동적으로 Bean 등록
+=> 메소드에서 반환된 값은 뷰 이름이 되어 해당 뷰를 렌더링
+-HTTP 요청 파라미터를 Java 객체에 바인딩하기 위해 @ModelAttribute 사용
