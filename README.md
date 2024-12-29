@@ -177,6 +177,9 @@ final
 단일책임원칙 : 모든 클래스는 하나의 책임만 갖는다(캡슐화)
 -Unit Test가 어렵다
 -final 사용불가 => 불변성보장 X. 객체 변동 가능성 있다.
+※불변성보장이 되지 않는 이유
+-final은 Spring에 의해 주입되는 값이 초기화 되는 시점에만 불변성 보장
+-@Autowired를 사용한 의존성 주입은 객체 생성 후에 필드에 값을 설정하기 때문에 필드에 final을 사용해도 필드가 불변이 되지 않습니다.
 
 (3)Setter Injection(Setter 주입)
 -Spring 3.x 버전까지는 DI 권장 방식이였지만, 현재는 아니다.
@@ -198,6 +201,10 @@ Setter 주입시
 final은 서비스에서 레퍼지토리를 바라보거나 컨트롤러에서 서비스를 바라볼때 쓰던데 음..
 
 
+DI는 IOC 프로그래밍 모델을 구현하는 방식 중 하나
+
+
+
 ----------------------------IOC(제어의 역전)-------------------------------
 
 -개발자가 제어해야 할 요소들을 Spring Framework에서 대신 제어해준다
@@ -217,5 +224,92 @@ Bean
 
 기존 1)객체생성 2)의존성 객체생성(클래스 내부 생성) 3)의존성 객체 메소드 호출 에서 
 스프링에서는 1)객체생성 2)의존성 객체 주입(제어권을 스프링에게 위임하여 스프링이 만들어놓은 객체를 주입) 3)의존성 객체 메소드 호출
+
+
+1) 객체 직접 생성
+public class A {
+    private B b;
+    public A() {
+        b = new B(); 
+    }
+    public void doWork() {
+        b.performTask(); 
+    }
+}
+
+B 객체를 C 객체로 변경
+public class A {
+    private C c; 
+
+    public A() {
+        c = new C(); 
+    }
+
+    public void doWork() {
+        c.performTask(); 
+    }
+}
+
+2) IOC 사용시
+-공통 인터페이스 정의(A클래스에서 Service만 바라본다)
+public interface Service {
+    void performTask();
+}
+
+-B 클래스 구현
+public class B implements Service {
+   @Override
+   public void performTask() {
+      System.out.println("B is performing a task");
+   }
+}
+
+-C 클래스 구현
+public class C implements Service {
+   @Override
+   public void performTask() {
+      System.out.println("C is performing a task");
+   }
+}
+
+-A 클래스 (IoC 컨테이너에서 의존성 주입)
+   public class A {
+   @Autowired
+   private Service service; // B 또는 C를 주입받음
+
+   public void doWork() {
+       service.performTask(); // Service 인터페이스만 바라봄
+   }
+}
+
+3) IOC 컨테이너 설정
+@Configuration
+public class AppConfig {
+   @Bean
+   public Service service() {
+      return new B(); // IoC 컨테이너에 B 또는 C 객체 등록
+   }
+}
+4) 애플리케이션 실행
+public class Main {
+   public static void main(String[] args) {
+   // IoC 컨테이너 생성
+   ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
+
+        A a = context.getBean(A.class);
+        a.doWork(); // 출력: B is performing a task
+   }
+}
+
+@Bean : 수동으로 빈 등록
+      : @Configuration 내부
+      : Bean - IOC 컨테이너에 의해 관리되는 객체
+
+@Component : 클래스를 자동으로 스캔하고 빈으로 등록할 때 사용 
+           : 애플리케이션 패키지 내부
+           : 등록된 빈의 이름은 클래스 이름의 카멜 케이스로 변환된 형태입니다(예: MyClass → myClass)
+
+AnnotationConfigApplicationContext는 Spring IoC 컨테이너를 초기화, 초기화 하는 과정에서 Java Config 파일을 읽어 빈 검색 및 등록하는 IoC 컨테이너입니다.
+
 
 https://blog.outsider.ne.kr/735
