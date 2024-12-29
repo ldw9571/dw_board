@@ -312,4 +312,11 @@ public class Main {
 AnnotationConfigApplicationContext는 Spring IoC 컨테이너를 초기화, 초기화 하는 과정에서 Java Config 파일을 읽어 빈 검색 및 등록하는 IoC 컨테이너입니다.
 
 
-https://blog.outsider.ne.kr/735
+
+----------------------------AOP(관점지향 프로그래밍)-------------------------------
+-보안처리, 로그 기록 같은 공통 기능을 따로 떼어내어 서비스는 서비스만의 핵심 기능에만 집중할 수 있도록 제공
+-Spring은 Proxy 기반으로 AOP 지원
+-Aspect가 적용되는 클래스(객체)에 프록시를 만듦
+-AOP 대상 클래스에 직접적으로 접근하는 것이 아닌 프록시에 접근
+https://giron.tistory.com/129
+
