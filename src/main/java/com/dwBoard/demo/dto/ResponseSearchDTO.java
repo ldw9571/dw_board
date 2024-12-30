@@ -1,10 +1,15 @@
 package com.dwBoard.demo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
-@Setter
+//객체 전체 초기화
+@AllArgsConstructor
+//Builder 패턴 사용하여 객체 생성(불변객체), 넣지 않은 필드는 기본값
+@Builder
 public class ResponseSearchDTO {
 
     private int page;             // 현재 페이지 번호

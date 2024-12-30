@@ -6,6 +6,7 @@ import com.dwBoard.demo.dto.ResponseSearchDTO;
 import com.dwBoard.demo.entity.BoardEntity;
 import com.dwBoard.demo.dto.BoardRequestDTO;
 import com.dwBoard.demo.service.BoardService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequiredArgsConstructor
 public class BoardController {
 
 
@@ -28,11 +30,11 @@ public class BoardController {
     // 생성자 단축키 Alt + insert
     private final BoardService boardService;
 
-    // @Autowired : spring이 spring 컨테이너에 있는 BoardService에 연결 시켜준다
-    @Autowired
-    public BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
+//     @Autowired : spring이 spring 컨테이너에 있는 BoardService에 연결 시켜준다
+//        @Autowired
+//        public BoardController(BoardService boardService) {
+//            this.boardService = boardService;
+//        }
 
 
 
@@ -47,6 +49,57 @@ public class BoardController {
     public String boardWriteForm(Model model){
         return "/board/write";
     }
+
+
+    //게시글 전체조회
+    // @Pageable
+    // page = 현재 페이지 위치
+    // size = 페이지 크기
+    // sort = 정렬
+    // orderBy = 순차
+    @GetMapping("/board/findAll")
+    public String boardFindAll(RequestSearchDTO requestSearchDTO,
+                               @RequestParam(value = "sort", required = false) String sort,
+                               @RequestParam(value = "orderBy", required = false) String orderBy,
+                               Model model) {
+
+        // 페이지 번호가 0 미만일 경우 0으로 설정
+        if (requestSearchDTO.getPage() < 0) {
+            requestSearchDTO.setPage(0);
+        }
+
+        // 전체조회
+        Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO, sort, orderBy);
+
+//        // all.getContent()로 실제 데이터
+//        List<BoardResponseDTO> contentList = all.getContent();
+//
+//        for (int i = 0; i < contentList.size(); i++) {
+//            System.out.println("contentList.get(i).getContent() = " + contentList.get(i).getContent());
+//        }
+
+        // model에 담을 pageDTO
+        ResponseSearchDTO responseSearchDTO = ResponseSearchDTO.builder()
+                .page(requestSearchDTO.getPage())
+                .recordSize(requestSearchDTO.getRecordSize())
+                .pageSize(requestSearchDTO.getPageSize())
+                .searchType(requestSearchDTO.getSearchType())
+                .searchText(requestSearchDTO.getSearchText())
+                .sort(sort != null ? sort : "")
+                .orderBy(orderBy != null ? orderBy : "")
+                .build();
+
+
+
+        //전체 게시글 정보
+        model.addAttribute("boards", all);
+
+        // 모델에 ResponseSearchDTO 추가
+        model.addAttribute("searchDTO", responseSearchDTO);
+
+        return "board/findAll";
+    }
+
 
 //    //게시글 작성 페이지 load
 //    //@param : mode - write: 작성 후 페이지 로드
@@ -101,51 +154,6 @@ public class BoardController {
 //        }
 //    }
 
-    //게시글 전체조회
-    // @Pageable
-    // page = 현재 페이지 위치
-    // size = 페이지 크기
-    // sort = 정렬
-    // orderBy = 순차
-    @GetMapping("/board/findAll")
-    public String boardFindAll(RequestSearchDTO requestSearchDTO,
-                               @RequestParam(value = "sort", required = false) String sort,
-                               @RequestParam(value = "orderBy", required = false) String orderBy,
-                               Model model) {
-
-        // 페이지 번호가 0 미만일 경우 0으로 설정
-        if (requestSearchDTO.getPage() < 0) {
-            requestSearchDTO.setPage(0);
-        }
-
-        // 전체조회
-        Page<BoardResponseDTO> all = boardService.findAll(requestSearchDTO, sort, orderBy);
-
-        // all.getContent()로 실제 데이터를 가져옵니다.
-        List<BoardResponseDTO> contentList = all.getContent();
-
-        for (int i = 0; i < contentList.size(); i++) {
-            System.out.println("contentList.get(i).getContent() = " + contentList.get(i).getContent());
-        }
-
-        model.addAttribute("boards", all);
-
-        // model에 담을 pageDTO
-        ResponseSearchDTO responseSearchDTO = new ResponseSearchDTO();
-
-        responseSearchDTO.setPage(requestSearchDTO.getPage());
-        responseSearchDTO.setRecordSize(requestSearchDTO.getRecordSize());
-        responseSearchDTO.setPageSize(requestSearchDTO.getPageSize());
-        responseSearchDTO.setSearchType(requestSearchDTO.getSearchType());
-        responseSearchDTO.setSearchText(requestSearchDTO.getSearchText());
-        responseSearchDTO.setSort(sort != null ? sort : "");
-        responseSearchDTO.setOrderBy(orderBy != null ? orderBy : "");
-
-        // 모델에 ResponseSearchDTO 추가
-        model.addAttribute("searchDTO", responseSearchDTO);
-
-        return "board/findAll";
-    }
 
 
 }
