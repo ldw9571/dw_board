@@ -115,13 +115,20 @@
 </head>
 <body>
 
+<!-- 에러 메시지가 존재하는 경우 alert 띄우기 -->
+<th:block th:if="${error}">
+    <script type="text/javascript">
+            alert([[${error}]]);
+        </script>
+</th:block>
+
 <div class="header-container">
     <h1>게시글 목록</h1>
     <a href="/board/write" class="button">게시글 작성</a>
 </div>
 
 <div class="search-container">
-    <form action="/board/findAll" method="get">
+    <form name="form" action="/board/findAll" method="get">
         <!-- 검색 옵션 -->
         <select name="searchType" id="searchType" th:value="${searchDTO.searchType}">
             <option value="" th:selected="${searchDTO.searchType == ''}">검색옵션선택</option>
@@ -149,7 +156,7 @@
 
         <!-- 페이지 크기 -->
         <input type="text" name="recordSize" placeholder="페이지수" style="width: 60px;" th:value="${searchDTO.recordSize}">
-        <button type="submit" class="button">검색</button>
+        <button type="button" class="button" onclick="formChkSubmit()">검색</button>
     </form>
 </div>
 
@@ -238,6 +245,19 @@
             }
         });
     });
+
+    function formChkSubmit() {
+        //페이지수
+        var recordSize = document.forms['form'].recordSize.value;
+        // 숫자인지 체크
+        if (isNaN(recordSize) || recordSize.trim() === "") {
+            alert("페이지수 오류 : 숫자가 아닌 값 입력\n확인 후 재시도해주세요");
+            return false;
+        }
+
+        document.forms['form'].submit();
+
+    }
 </script>
 
 </body>

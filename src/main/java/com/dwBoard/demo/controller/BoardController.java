@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.lang.model.SourceVersion;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Controller
 @RequiredArgsConstructor
@@ -62,6 +63,15 @@ public class BoardController {
                                @RequestParam(value = "sort", required = false) String sort,
                                @RequestParam(value = "orderBy", required = false) String orderBy,
                                Model model) {
+
+        System.out.println("requestSearchDTO.getPage() = " + requestSearchDTO.getPage());
+        // 페이지 번호가 숫자가 아닐 경우
+        if (!Pattern.matches("^[0-9]+$", String.valueOf(requestSearchDTO.getPage()))) {
+            System.out.println("들");
+
+            model.addAttribute("error", "페이지 번호는 숫자여야 합니다.");
+            return "board/findAll";  // 잘못된 페이지 번호를 입력했을 경우 에러 메시지 반환
+        }
 
         // 페이지 번호가 0 미만일 경우 0으로 설정
         if (requestSearchDTO.getPage() < 0) {
